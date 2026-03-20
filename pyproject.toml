@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "metacontextify"
 version = "0.1.0"
-description = "A package for retrieving environmental context for marine sequences"
+description = "Automated environmental annotation of marine metagenomic samples"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
@@ -56,10 +56,10 @@ docs = [
 metacontextify = "metacontextify.__main__:app"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/metacontextify"
-Documentation = "https://metacontextify.readthedocs.io"
-Repository = "https://github.com/yourusername/metacontextify.git"
-"Bug Tracker" = "https://github.com/yourusername/metacontextify/issues"
+Homepage = "https://github.com/MaartenLangen/metacontextify"
+Documentation = "https://github.com/MaartenLangen/metacontextify"
+Repository = "https://github.com/MaartenLangen/metacontextify.git"
+"Bug Tracker" = "https://github.com/MaartenLangen/metacontextify/issues"
 
 [tool.setuptools]
 packages = ["metacontextify", "metacontextify.data_retrievers", "metacontextify.utils"]

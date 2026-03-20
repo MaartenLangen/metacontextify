@@ -26,7 +26,7 @@ The tool provides a command-line interface and can be imported as Python module.
 ### From source
 
 ```bash
-git clone https://gitlab.kuleuven.be/csb/members/maarten/metacontextify.git
+git clone https://github.com/MaartenLangen/metacontextify.git
 cd metacontextify
 pip install -e .
 ```
@@ -252,6 +252,6 @@ If you use Metacontextify in your research, please cite:
   title={Metacontextify: Automated environmental annotation of marine metagenomic samples},
   author={Maarten Langen, Vera van Noort},
   year={2026},
-  url={https://gitlab.kuleuven.be/csb/members/maarten/metacontextify.git}
+  url={https://github.com/MaartenLangen/metacontextify.git}
 }
 ```
