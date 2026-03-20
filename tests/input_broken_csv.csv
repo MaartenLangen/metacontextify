@@ -1,0 +1,5 @@
+sample_id,lat,lon,collection_date,depth
+sample_on_land,50.86374144949997,4.687394178510209,2004-01-01,0
+sampe_marine,42.677,3.182,2004-01-01,0
+sample_grid,42.582,3.077,2004-01-01,0
+sample_depth,42.748,3.088,2004-01-01,35

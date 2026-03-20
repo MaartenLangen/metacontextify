@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metacontextify"
+version = "0.1.0"
+description = "A package for retrieving environmental context for marine sequences"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Maarten Langen", email = "maarten.langen@kuleuven.be"}
+]
+keywords = ["bioinformatics", "marine", "mgnify", "environmental-data"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+dependencies = [
+    "pandas>=1.3.0",
+    "requests>=2.25.0",
+    "urllib3>=1.26.0",
+    "xarray>=0.20.0",
+    "copernicusmarine>=0.1.0",
+    "beautifulsoup4>=4.9.0",
+    "appdirs>=1.4.4",
+    "typer",
+    "netcdf4"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.12.0",
+    "black>=21.0",
+    "isort>=5.0",
+    "flake8>=3.9",
+    "mypy>=0.910",
+    "python-dotenv>=0.19.0",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme>=1.0",
+]
+
+[project.scripts]
+metacontextify = "metacontextify.__main__:app"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/metacontextify"
+Documentation = "https://metacontextify.readthedocs.io"
+Repository = "https://github.com/yourusername/metacontextify.git"
+"Bug Tracker" = "https://github.com/yourusername/metacontextify/issues"
+
+[tool.setuptools]
+packages = ["metacontextify", "metacontextify.data_retrievers", "metacontextify.utils"]
+
+[tool.setuptools.package-data]
+metacontextify = ["data/*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

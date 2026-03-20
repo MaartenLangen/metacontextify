@@ -1,0 +1,5 @@
+__pycache__/
+build/
+metacontextify.egg-info/
+tests/PF00313_hits.json
+.env

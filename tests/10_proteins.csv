@@ -1,0 +1,14 @@
+protein_id,assembly_id,sample_id,is_marine,lat,lon,sample_date,depth,depth_units,temperature_metadata,temperature_units,salinity_metadata,salinity_units,nitrate,nitrate_units,oxygen,oxygen_units,pH,temperature_copernicus,salinity_copernicus,no3,o2,ph
+MGYP001507428923,ERZ1464568,SRS2629417,,,,,,,,,,,,,,,,,,,,
+MGYP001578443496,ERZ1505398,ERS3742476,,,,,,,,,,,,,,,,,,,,
+MGYP001586147811,ERZ1505398,ERS3742476,,,,,,,,,,,,,,,,,,,,
+MGYP000111278967,ERZ1694526,ERS1030533,,,,,,,,,,,,,,,,,,,,
+MGYP003296110354,ERZ1767631,SRS2795153,,,,,,,,,,,,,,,,,,,,
+MGYP000687033366,ERZ508608,SRS2617850,True,17.9673,-67.0188,2012-04-25,,,,,,,,,,,,27.78926968574524,36.575416289269924,0.0019957481,206.09,8.047734
+MGYP003779872185,ERZ781244,SRS1668519,,,,,,,,,,,,,,,,,,,,
+MGYP001489611893,ERZ786674,ERS796867,,,,,,,,,,,,,,,,,,,,
+MGYP000724600136,ERZ794912,SRS976606,,,,,,,,,,,,,,,,,,,,
+MGYP000724600136,ERZ794912,SRS976606,,,,,,,,,,,,,,,,,,,,
+MGYP001944407275,ERZ794971,SRS2947076,,,,,,,,,,,,,,,,,,,,
+MGYP000724600136,ERZ842394,SRS976606,,,,,,,,,,,,,,,,,,,,
+MGYP000724600136,ERZ842394,SRS976606,,,,,,,,,,,,,,,,,,,,
