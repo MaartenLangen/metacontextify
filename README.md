@@ -2,6 +2,9 @@
 
 A Python package for retrieving environmental context and properties for marine sequences from MGnify and ENA.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19130464.svg)](https://doi.org/10.5281/zenodo.19130464)
+[![PyPI version](https://badge.fury.io/py/metacontextify.svg)](https://pypi.org/project/metacontextify/)
+
 ## Overview
 
 Metacontextify provides a comprehensive pipeline for enriching sequence data with environmental metadata from multiple sources:
