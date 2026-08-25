@@ -23,6 +23,11 @@ def test_simsearch():
     assert result.exit_code == 0
     assert Path('./tests/PF00313_10_results.csv').is_file()
 
+def test_simsearch_only_2_props():
+    result = runner.invoke(app, ['simsearch', './tests/PF00313_hits.json', './tests/PF00313_10_results_2_props.csv', '--nb-hits', '10', '--properties', 'temperature,nitrate'])
+    assert result.exit_code == 0
+    assert Path('./tests/PF00313_10_results_2_props.csv').is_file()
+
 def test_functional_csv():
     result = runner.invoke(app, ['location-file', './tests/input_functional_csv.csv', './tests/output_functional_csv.csv' ])
     assert result.exit_code == 0

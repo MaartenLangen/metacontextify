@@ -1,5 +1,5 @@
 """
-Parser functions for reading and processing various input file formats.
+Parser functions for reading and processing various input file formats and parameters.
 """
 
 import json
@@ -11,6 +11,21 @@ import pandas as pd
 from .logging import get_logger
 
 logger = get_logger("data_retrievers.parsers")
+
+PHYSICAL_PROPERTIES = set(['temperature', 'salinity'])
+DAILY_CHEMICAL_PROPERTIES = set(['nitrate','oxygen', 'phosphate'])
+MONTHLY_CHEMICAL_PROPERTIES = set(['ph', 'phytoplankton'])
+CHEMICAL_PROPERTIES = DAILY_CHEMICAL_PROPERTIES.union(MONTHLY_CHEMICAL_PROPERTIES)
+ALL_PROPERTIES = PHYSICAL_PROPERTIES.union(CHEMICAL_PROPERTIES)
+PROPERTY_ORDER = [
+    "temperature",
+    "salinity",
+    "nitrate",
+    "phosphate",
+    "oxygen",
+    "ph",
+    "phytoplankton",
+]
 
 
 def read_mgnify_similarity_search_json(
@@ -104,3 +119,58 @@ def parse_dates(date_str: str):
     except:
         date = None
     return date
+
+def parse_depths(dirty_depth):
+    if isinstance(dirty_depth, (int, float)):
+        return dirty_depth
+    try:
+        dirty_depth = dirty_depth.lower()
+        if dirty_depth == 'surface':
+                return 0
+        if '-' in dirty_depth:
+            depths = dirty_depth.strip().split('-')
+            depths = [parse_depths(x) for x in depths]
+            depth = abs(depths[1]+depths[0])/2
+            return depth
+        elif 'cm' in dirty_depth:
+            depth = float(dirty_depth.strip().replace('cm',''))*(10**(-2))
+            return depth
+        elif 'm' in dirty_depth:
+            depth = float(dirty_depth.strip().replace('m',''))
+            return depth
+        else:
+            depth = float(dirty_depth)
+            return depth
+    except (ValueError, TypeError, AttributeError):
+        return None
+
+def parse_cli_properties(cli_properties: str):
+    """
+    Parse a comma-separated list of CLI properties and validate them.
+
+    Parameters
+    ----------
+    cli_properties : str
+        Comma-separated string of property names.
+
+    Returns
+    -------
+    set[str]
+        Set of validated, normalized property names.
+
+    Raises
+    ------
+    ValueError
+        If one or more properties are not recognized.
+    """
+    accepted_properties = ALL_PROPERTIES
+    # convert the string to a list
+    properties = cli_properties.split(',')
+    # clean the elements
+    properties = set([property.strip().lower() for property in properties])
+    # check whether all properties are valid
+    unrecognized_properties = properties - accepted_properties
+    if len(unrecognized_properties) > 0:
+        raise ValueError(f"The following property/properties were not recognized: {', '.join([p for p in unrecognized_properties])}")
+    else:
+        return properties

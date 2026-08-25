@@ -1,5 +1,7 @@
-"""
-HTTP utility functions for API requests.
+"""HTTP utility functions for API requests.
+
+Provides helpers for retrying GET requests, validating JSON responses,
+and translating HTTP errors into local exceptions.
 """
 
 import time
@@ -13,44 +15,7 @@ from .logging import get_logger
 
 logger = get_logger("utils.http")
 
-
-def http_get(
-    url: str,
-    params: Optional[Dict[str, Any]] = None,
-    headers: Optional[Dict[str, str]] = None,
-    timeout: Optional[int] = None,
-) -> requests.Response:
-    """
-    Wrapper around requests.get for HTTP GET requests.
-
-    Parameters
-    ----------
-    url : str
-        The URL to request.
-    params : dict, optional
-        Query parameters to include in the URL.
-    headers : dict, optional
-        HTTP headers to include in the request.
-    timeout : int, optional
-        Request timeout in seconds.
-
-    Returns
-    -------
-    requests.Response
-        Response object from the HTTP GET request.
-
-    Raises
-    ------
-    requests.exceptions.RequestException
-        If the HTTP request fails.
-    """
-    try:
-        response = requests.get(url, params=params, headers=headers, timeout=timeout)
-        response.raise_for_status()
-        return response
-    except requests.exceptions.RequestException as e:
-        handle_http_error(e)
-        raise
+RequestException = requests.exceptions.RequestException
 
 
 def retry_request(
@@ -60,8 +25,7 @@ def retry_request(
     max_retries: int = 3,
     backoff_factor: float = 1.5,
 ) -> requests.Response:
-    """
-    Wrapper around http_get that retries with exponential backoff.
+    """Perform a GET request with retries and exponential backoff.
 
     Parameters
     ----------
@@ -94,18 +58,14 @@ def retry_request(
     session.mount("http://", adapter)
     session.mount("https://", adapter)
 
-    try:
-        response = session.get(url, params=params, headers=headers)
-        response.raise_for_status()
-        return response
-    except requests.exceptions.RequestException as e:
-        handle_http_error(e)
-        raise
+    response = session.get(url, params=params, headers=headers)
+    response.raise_for_status()
+    return response
+        
 
 
 def validate_json(response: requests.Response) -> Dict[str, Any]:
-    """
-    Validate and parse JSON response.
+    """Validate and parse a JSON response.
 
     Parameters
     ----------
@@ -127,22 +87,3 @@ def validate_json(response: requests.Response) -> Dict[str, Any]:
     except requests.exceptions.JSONDecodeError as e:
         logger.error(f"Invalid JSON response: {e}")
         raise ValueError(f"Failed to parse JSON: {e}")
-
-
-def handle_http_error(error: Exception) -> None:
-    """
-    Handle and log HTTP errors.
-
-    Parameters
-    ----------
-    error : Exception
-        The exception that occurred.
-    """
-    if isinstance(error, requests.exceptions.Timeout):
-        logger.error(f"Request timeout: {error}")
-    elif isinstance(error, requests.exceptions.ConnectionError):
-        logger.error(f"Connection error: {error}")
-    elif isinstance(error, requests.exceptions.HTTPError):
-        logger.error(f"HTTP error: {error}")
-    else:
-        logger.error(f"Request error: {error}")

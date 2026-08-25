@@ -5,10 +5,12 @@ import pandas as pd
 import typer
 
 from . import pipelines
-from .utils.logging import configure_logging
+from .utils.logging import configure_logging, get_logger
+from .utils.parsers import parse_cli_properties
 from .data_retrievers.cmems import login
 
 app = typer.Typer()
+logger = get_logger("__main__")
 
 
 @app.callback()
@@ -27,7 +29,11 @@ def cmems_login(
         password: str
 ) -> None:
     """Login to CMEMS with copernicus account."""
-    login(username, password)
+    try:
+        login(username, password)
+    except ValueError as e:
+        raise typer.BadParameter("The provided combination of username and password did not work.")
+
 
 
 @app.command()
@@ -43,8 +49,8 @@ def id_file(
         )
     ],
     id_type: Annotated[
-        Literal["protein", "genome", "assembly", "sample", "ena_sample"],
-        typer.Argument(help="Type of IDs in the input file (protein/genome/assembly/sample/ena_sample)")
+        Literal["protein", "genome", "assembly", "sample", "ena_sample", "ena_run"],
+        typer.Argument(help="Type of IDs in the input file (protein/genome/assembly/sample/ena_sample/ena_run)")
     ],
     output: Annotated[
         Path,
@@ -55,13 +61,54 @@ def id_file(
             help="Path to output CSV file for environmental properties"
         )
     ],
+    properties: Annotated[
+        str,
+        typer.Option(
+            help="A comma seperated list of the properties for which Copernicus values will be " + \
+                "retrieved. If omitted, all values will be retrieved. Possible values: " + \
+                "temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton"
+        )
+    ] = 'temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton'
 ) -> None:
     """Retrieve environmental properties for a list of MGnify or ENA IDs."""
-    result_df = pipelines.get_properties_for_id_file(
+    try:
+        parsed_properties = parse_cli_properties(properties)
+    except ValueError as e:
+        raise typer.BadParameter(e)
+    result_df, incomplete = pipelines.get_properties_for_id_file(
         input,
         id_type,
+        parsed_properties
     )
+    result_df.rename(columns={
+        'temperature_copernicus': 'temperature_copernicus [C]',
+        'salinity': 'salinity [psu]',
+        'phosphate': 'phosphate [mmol.m-3]',
+        'nitrate': 'nitrate [mmol.m-3]',
+        'oxygen': 'oxygen [mmol.m-3]',
+        'phytoplankton': 'phytoplankton [mmol.m-3]',
+        'ph_copernicus': 'ph_copernicus [1]'
+    }, inplace=True)
     result_df.to_csv(output, index=False)
+
+    if (
+        isinstance(incomplete, pd.DataFrame)
+        and 
+        (incomplete.shape[0] > 0)
+    ):
+        incomplete.to_csv(
+            output.with_name(f"{output.stem}.incomplete{output.suffix}"),
+            index=False
+        )
+    elif (
+        isinstance(incomplete, list)
+        and
+        (len(incomplete) > 0)
+    ):
+        incomplete_output = output.with_name(f"{output.stem}.incomplete.txt")
+        with open(incomplete_output, 'w') as f:
+            for id in incomplete:
+                f.write(f"{id}\n")
 
 
 
@@ -75,6 +122,14 @@ def simsearch(
         Path,
         typer.Argument(help="Path to output CSV file for environmental properties")
     ],
+    properties: Annotated[
+        str,
+        typer.Option(
+            help="A comma seperated list of the properties for which Copernicus values will be " + \
+                "retrieved. If omitted, all values will be retrieved. Possible values: " + \
+                "temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton"
+        )
+    ] = 'temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton',
     nb_hits: Annotated[
         int,
         typer.Option(
@@ -83,11 +138,30 @@ def simsearch(
     ] = -1,
 ) -> None:
     """Retrieve environmental properties for MGnify similarity search results."""
-    result_df = pipelines.get_properties_for_mgnify_search_results(
+    try:
+        parsed_properties = parse_cli_properties(properties)
+    except ValueError as e:
+        raise typer.BadParameter(e)
+    result_df, incomplete_df = pipelines.get_properties_for_mgnify_search_results(
         input,
+        parsed_properties,
         nb_hits,
     )
+    result_df.rename(columns={
+        'temperature_copernicus': 'temperature_copernicus [C]',
+        'salinity': 'salinity [psu]',
+        'phosphate': 'phosphate [mmol.m-3]',
+        'nitrate': 'nitrate [mmol.m-3]',
+        'oxygen': 'oxygen [mmol.m-3]',
+        'phytoplankton': 'phytoplankton [mmol.m-3]',
+        'ph_copernicus': 'ph_copernicus [1]'
+    }, inplace=True)
     result_df.to_csv(output, index=False)
+    if incomplete_df.shape[0] > 0:
+        incomplete_df.to_csv(
+            output.with_name(f"{output.stem}.incomplete{output.suffix}"),
+            index=False
+        )
 
 @app.command()
 def location_file(
@@ -110,9 +184,30 @@ def location_file(
             help="Path to output CSV file for environmental properties"
         )
     ],
+    properties: Annotated[
+        str,
+        typer.Option(
+            help="A comma seperated list of the properties for which Copernicus values will be " + \
+                "retrieved. If omitted, all values will be retrieved. Possible values: " + \
+                "temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton"
+        )
+    ] = 'temperature,salinity,nitrate,oxygen,ph,phosphate,phytoplankton'
 ) -> None:
     """Retrieve environmental properties for a csv file with locations."""
-    result_df = pipelines.get_properties_for_locations_file(input)
+    try:
+        parsed_properties = parse_cli_properties(properties)
+    except ValueError as e:
+        raise typer.BadParameter(e)
+    result_df = pipelines.get_properties_for_locations_file(input, parsed_properties)
+    result_df.rename(columns={
+        'temperature_copernicus': 'temperature_copernicus [C]',
+        'salinity': 'salinity [psu]',
+        'phosphate': 'phosphate [mmol.m-3]',
+        'nitrate': 'nitrate [mmol.m-3]',
+        'oxygen': 'oxygen [mmol.m-3]',
+        'phytoplankton': 'phytoplankton [mmol.m-3]',
+        'ph_copernicus': 'ph_copernicus [1]'
+    }, inplace=True)
     result_df.to_csv(output, index=False)
 
 if __name__ == "__main__":

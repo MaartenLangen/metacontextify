@@ -72,7 +72,7 @@ def test_login_fail(credentials):
     # Use a wrong password to test failure
     try:
         login(username, "wrong_password")
-    except RuntimeError:
+    except ValueError:
         assert not CREDS_FILE.is_file()
 
 
@@ -95,12 +95,42 @@ def test_open_phys():
 
 
 def test_open_chem():
-    static_ds, ds = _open_chem()
+    static_ds, ds_daily, ds_monthly = _open_chem()
     assert isinstance(static_ds, xarray.Dataset)
-    assert isinstance(ds, xarray.Dataset)
+    assert isinstance(ds_daily, xarray.Dataset)
+    assert isinstance(ds_monthly, xarray.Dataset)
 
+def test_temperature_small(small_df):
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        results = get_properties(small_df, set(['temperature']))
+    assert not any(
+        isinstance(warning.message, RuntimeWarning)
+        and "Mean of empty slice" in str(warning.message)
+        for warning in caught_warnings
+    )
+    assert isinstance(results, pd.DataFrame)
+    assert results.shape[0] == 4
+    assert set(results.columns) == set(["temperature", "is_grid_mean_physical", "is_depth_approx_physical"])
 
-def test_phys_coords_small(small_df):
+def test_nitrate_and_ph_small(small_df):
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        results = get_properties(small_df, set(['nitrate', 'ph']))
+    assert not any(
+        isinstance(warning.message, RuntimeWarning)
+        and "Mean of empty slice" in str(warning.message)
+        for warning in caught_warnings
+    )
+    assert isinstance(results, pd.DataFrame)
+    assert results.shape[0] == 4
+    assert set(results.columns) == set([
+        "nitrate", "ph", 
+        "is_grid_mean_daily_chemical", "is_grid_mean_monthly_chemical",
+        "is_depth_approx_daily_chemical", "is_depth_approx_monthly_chemical"
+    ])
+
+def test_all_properties_coords_small(small_df):
     with warnings.catch_warnings(record=True) as caught_warnings:
         warnings.simplefilter("always")
         results = get_properties(small_df)
@@ -111,9 +141,17 @@ def test_phys_coords_small(small_df):
     )
     assert isinstance(results, pd.DataFrame)
     assert results.shape[0] == 4
-    assert set(results.columns) == set(["temperature", "salinity", "is_grid_mean_phys", "nitrate", "oxygen", "pH", "phosphate", "phytoplankton", "is_grid_mean_chem"])
+    assert set(results.columns) == set([
+        "temperature", "salinity", "is_grid_mean_physical", "is_depth_approx_physical",
+        "nitrate", "oxygen", "phosphate", "is_grid_mean_daily_chemical", "is_depth_approx_daily_chemical",
+        "ph", "phytoplankton", "is_grid_mean_monthly_chemical", "is_depth_approx_monthly_chemical"
+    ])
 
 def test_large(large_df): 
     result = get_properties(large_df)
     assert result.shape[0] == 100
-    assert set(result.columns) == set(["temperature", "salinity", "is_grid_mean_phys", "nitrate", "oxygen", "pH", "phosphate", "phytoplankton","is_grid_mean_chem"])
+    assert set(result.columns) == set([
+        "temperature", "salinity", "is_grid_mean_physical", "is_depth_approx_physical",
+        "nitrate", "oxygen", "phosphate", "is_grid_mean_daily_chemical", "is_depth_approx_daily_chemical",
+        "ph", "phytoplankton", "is_grid_mean_monthly_chemical", "is_depth_approx_monthly_chemical"
+    ])

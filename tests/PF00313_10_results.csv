@@ -1,12 +1,10 @@
-protein_id,assembly_id,sample_id,is_marine,lat,lon,sample_date,depth,depth_units,temperature_metadata,temperature_units,salinity_metadata,salinity_units,nitrate_metadata,nitrate_units,oxygen_metadata,oxygen_units,pH_metadata,temperature_copernicus,salinity_copernicus,is_grid_mean_phys,nitrate_copernicus,oxygen_copernicus,pH_copernicus,phosphate,phytoplankton,is_grid_mean_chem
-MGYP001507428923,ERZ1464568,SRS2629417,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP001578443496,ERZ1505398,ERS3742476,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP001586147811,ERZ1505398,ERS3742476,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP000111278967,ERZ1694526,ERS1030533,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP003296110354,ERZ1767631,SRS2795153,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP000687033366,ERZ508608,SRS2617850,True,17.9673,-67.0188,2012-04-25,,,,,,,,,,,,27.78926968574524,36.575416289269924,True,0.0019957481,206.09,8.047734,0.0013367905,1.317673,True
-MGYP003779872185,ERZ781244,SRS1668519,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP001489611893,ERZ786674,ERS796867,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP000724600136,ERZ794912,SRS976606,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP001944407275,ERZ794971,SRS2947076,,,,,,,,,,,,,,,,,,,,,,,,
-MGYP000724600136,ERZ842394,SRS976606,,,,,,,,,,,,,,,,,,,,,,,,
+protein_id,assembly_id,sample_id,lat,lon,sample_date,depth_raw,temperature_metadata,ph_metadata,is_marine,depth,salinity [psu],temperature_copernicus [C],is_grid_mean_physical,is_depth_approx_physical,oxygen [mmol.m-3],nitrate [mmol.m-3],phosphate [mmol.m-3],is_grid_mean_daily_chemical,is_depth_approx_daily_chemical,ph_copernicus [1],phytoplankton [mmol.m-3],is_grid_mean_monthly_chemical,is_depth_approx_monthly_chemical
+MGYP000111278967,ERZ1694526,SAMEA3723384,46.39819444,10.58555556,2013-09-25,0,,,False,0.0,,,,,,,,,,,,,
+MGYP001489611893,ERZ786674,SAMEA3489718,,,,,,,False,,,,,,,,,,,,,,
+MGYP000724600136,ERZ794912,SAMN03792071,-34.07,-59.07,2009-05-08,,,,False,,,,,,,,,,,,,,
+MGYP000724600136,ERZ842394,SAMN03792071,-34.07,-59.07,2009-05-08,,,,False,,,,,,,,,,,,,,
+MGYP001944407275,ERZ794971,SAMN08517351,,,2015-12-17,,12.0,,False,,,,,,,,,,,,,,
+MGYP003779872185,ERZ781244,SAMN05720240,21.7658,-100.163,2012-05-30,,,,False,,,,,,,,,,,,,,
+MGYP000687033366,ERZ508608,SAMN06268769,17.967317,-67.018833,2012-04-25,,,,True,,36.575416289269924,27.78926968574524,True,False,0.0026605655439198017,0.001515973242931068,208.36669921875,True,False,1.3176729679107666,8.047734260559082,True,False
+MGYP001507428923,ERZ1464568,SAMN07833483,12.97,77.59,2015-05-29,,,,False,,,,,,,,,,,,,,
+MGYP003296110354,ERZ1767631,SAMN08242256,31.79,102.55,2013-03-01,,,,False,,,,,,,,,,,,,,
