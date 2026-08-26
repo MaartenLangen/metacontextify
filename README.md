@@ -29,7 +29,7 @@ These environmental properties are:
 - phosphate concentration [mmol.m-3]
 - phytoplankton concentration in carbon [mmol.m-3]
 
-The tool provides a command-line interface and can be imported as Python module.
+The tool provides a command-line interface and can be imported as Python module. Every version is also released as a Docker image.
 
 ## Installation
 
@@ -44,6 +44,11 @@ pip install metacontextify
 ```bash
 conda create -n metacontextify metacontextify
 conda activate metacontextify
+```
+
+### Docker image
+```bash
+docker pull ghcr.io/maartenlangen/metacontextify:latest
 ```
 
 ### From source
@@ -147,6 +152,20 @@ The input csv should have at least the columns `lat, lon, sample_date, depth` (o
 
 ```bash
 metacontextify location-file --help
+```
+
+## Quick start with Docker
+
+All the commands explained in the CLI can also be used in the docker image. E.g. to process and ID file:
+
+```bash
+docker run --rm \
+    -v $(pwd):/data \
+    ghcr.io/maartenlangen/metacontextify:latest \
+    id-file \
+        /data/input.txt \
+        protein \
+        /data/results.csv
 ```
 
 ## Quick Start with Python module
