@@ -2,7 +2,7 @@
 
 A Python package for enriching marine sequences from ENA and MGnify with environmental properties from Copernicus Marine Service
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19130464.svg)](https://doi.org/10.5281/zenodo.19130464)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19130463.svg)](https://doi.org/10.5281/zenodo.19130463)
 [![PyPI version](https://badge.fury.io/py/metacontextify.svg)](https://pypi.org/project/metacontextify/)
 
 ## Overview
